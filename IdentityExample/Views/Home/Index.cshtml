@@ -1,0 +1,16 @@
+﻿<h1>Home page</h1>
+
+@if(!this.User.Identity.IsAuthenticated)
+{
+	<a href="/home/login">login</a> <br />
+	<a href="/home/register">register</a>
+}
+
+else
+{
+	<a href="/home/logout">Logout</a>
+	<br />
+
+	<a href="/home/secret">Secret</a>
+}
+
