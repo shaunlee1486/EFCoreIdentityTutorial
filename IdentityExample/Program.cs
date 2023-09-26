@@ -1,6 +1,8 @@
 using IdentityExample.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 
 namespace IdentityExample
 {
@@ -22,6 +24,7 @@ namespace IdentityExample
 				config.Password.RequireDigit = false;
 				config.Password.RequireNonAlphanumeric = false;
 				config.Password.RequireUppercase = false;
+				config.SignIn.RequireConfirmedEmail = true;
 			})
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();
@@ -32,6 +35,9 @@ namespace IdentityExample
 				config.LoginPath = "/Home/Login";
 			});
 
+			var mailKitOptions = builder.Configuration.GetSection("EmailSetting").Get<MailKitOptions>();
+
+			builder.Services.AddMailKit(config => config.UseMailKit(mailKitOptions));
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
