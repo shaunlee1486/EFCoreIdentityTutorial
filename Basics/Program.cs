@@ -1,3 +1,7 @@
+using Basics.AuthorizationRequirements;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 namespace Basics
 {
 	public class Program
@@ -13,6 +17,27 @@ namespace Basics
 					config.LoginPath = "/Home/Authenticate";
 				});
 
+			builder.Services.AddAuthorization(config =>
+			{
+				//var defaultAuthBuilder = new AuthorizationPolicyBuilder();
+				//config.DefaultPolicy = defaultAuthBuilder
+				//							.RequireAuthenticatedUser()
+				//							.RequireClaim(ClaimTypes.DateOfBirth)
+				//							.Build();
+
+				//config.AddPolicy("Claim.Bob", policyBuilder =>
+				//{
+				//	policyBuilder.RequireClaim(ClaimTypes.DateOfBirth);
+				//});
+				config.AddPolicy("Admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
+				
+				config.AddPolicy("Claim.Bob", policyBuilder =>
+				{
+					policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
+				});
+			});
+
+			builder.Services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
