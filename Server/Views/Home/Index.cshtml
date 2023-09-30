@@ -1,0 +1,8 @@
+﻿<h1>Home page</h1>
+
+@if(!this.User.Identity.IsAuthenticated)
+{
+	<a href="/home/secret">Secret</a>
+	<a href="/home/SecretPolicy">SecretPolicy</a>
+	<a href="/home/SecretRole">SecretRole</a>
+}
